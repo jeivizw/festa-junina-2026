@@ -1,0 +1,341 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --verde: #4CAF50;
+    --amarelo: #FFD700;
+    --vermelho: #FF4444;
+    --azul: #2196F3;
+    --laranja: #FF9800;
+    --roxo: #9C27B0;
+    --fundo: #FFF8E1;
+    --texto: #5D4037;
+    --sombra: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #FFE0B2, #FFCC80, #FFAB91);
+    background-attachment: fixed;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Decoração de fundo */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 68, 68, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 80%, rgba(76, 175, 80, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.festa-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Bandeirinhas */
+.bandeirinhas {
+    text-align: center;
+    font-size: 2rem;
+    animation: balancar 2s infinite ease-in-out;
+}
+
+@keyframes balancar {
+    0%, 100% { transform: rotate(-2deg); }
+    50% { transform: rotate(2deg); }
+}
+
+/* Cabeçalho */
+.cabecalho {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #FF6B35, #F7C59F);
+    border-radius: 20px;
+    margin-bottom: 30px;
+    box-shadow: var(--sombra);
+    position: relative;
+    overflow: hidden;
+}
+
+.cabecalho::before {
+    content: '🌽 🎉 🏮 🎊 🌽';
+    position: absolute;
+    top: -10px;
+    left: 0;
+    width: 100%;
+    font-size: 2rem;
+    opacity: 0.3;
+    animation: deslizar 20s linear infinite;
+}
+
+@keyframes deslizar {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.cabecalho h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3rem;
+    color: white;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+    margin-bottom: 10px;
+}
+
+.subtitulo {
+    font-size: 1.2rem;
+    color: white;
+    font-weight: 600;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Navegação */
+.menu-navegacao {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.btn-nav {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 25px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    cursor: pointer;
+    background: white;
+    color: var(--texto);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-nav:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.btn-nav.ativo {
+    background: linear-gradient(135deg, var(--vermelho), var(--laranja));
+    color: white;
+    transform: scale(1.05);
+}
+
+/* Seções */
+.secao {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.secao.ativa {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.secao h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    color: var(--texto);
+    text-align: center;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.secao h2::after {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--amarelo), var(--vermelho));
+    margin: 10px auto;
+    border-radius: 2px;
+}
+
+/* Formulários */
+.formulario {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: var(--sombra);
+    margin-bottom: 30px;
+}
+
+.input-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.input-group input,
+.input-group select {
+    flex: 1;
+    min-width: 200px;
+    padding: 15px;
+    border: 2px solid #E0E0E0;
+    border-radius: 15px;
+    font-size: 1rem;
+    font-family: 'Nunito', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    outline: none;
+    border-color: var(--amarelo);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+.btn-adicionar {
+    width: 100%;
+    margin-top: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--verde), #45a049);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Fredoka One', cursive;
+}
+
+.btn-adicionar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+/* Cards Container */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* Cards */
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: var(--sombra);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, var(--amarelo), var(--vermelho), var(--verde));
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+}
+
+.card h3 {
+    font-family: 'Fredoka One', cursive;
+    color: var(--texto);
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+}
+
+.card p {
+    color: #666;
+    margin: 5px 0;
+}
+
+.card .emoji {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.card .btn-excluir {
+    background: var(--vermelho);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.card .btn-excluir:hover {
+    background: #d32f2f;
+    transform: scale(1.05);
+}
+
+/* Rodapé */
+.rodape {
+    text-align: center;
+    padding: 30px;
+    margin-top: 50px;
+    background: linear-gradient(135deg, #FF6B35, #F7C59F);
+    border-radius: 20px;
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    box-shadow: var(--sombra);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .cabecalho h1 {
+        font-size: 2rem;
+    }
+    
+    .menu-navegacao {
+        flex-direction: column;
+    }
+    
+    .btn-nav {
+        width: 100%;
+    }
+    
+    .input-group {
+        flex-direction: column;
+    }
+    
+    .input-group input,
+    .input-group select {
+        min-width: 100%;
+    }
+    
+    .cards-container {
+        grid-template-columns: 1fr;
+    }
+}

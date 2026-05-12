@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉 Arraiá Virtual - Festa Junina 2024</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="festa-container">
+        <!-- Decoração de bandeirinhas -->
+        <div class="bandeirinhas">
+            <span>🎊</span><span>🎉</span><span>🎊</span><span>🎉</span><span>🎊</span>
+        </div>
+
+        <header class="cabecalho">
+            <h1>🎪 Arraiá Virtual 2024 🎪</h1>
+            <p class="subtitulo">A festa mais animada do pedaço!</p>
+        </header>
+
+        <!-- Menu de Navegação -->
+        <nav class="menu-navegacao">
+            <button class="btn-nav ativo" data-secao="comidas">🌽 Comidas Típicas</button>
+            <button class="btn-nav" data-secao="brincadeiras">🎯 Brincadeiras</button>
+            <button class="btn-nav" data-secao="participantes">👥 Participantes</button>
+            <button class="btn-nav" data-secao="barracas">🏪 Barracas</button>
+        </nav>
+
+        <!-- Seção de Comidas Típicas -->
+        <section id="comidas" class="secao ativa">
+            <h2>🌽 Comidas Típicas</h2>
+            <form id="form-comida" class="formulario">
+                <div class="input-group">
+                    <input type="text" id="nome-comida" placeholder="Nome da comida" required>
+                    <input type="number" id="preco-comida" placeholder="Preço R$" step="0.01" required>
+                    <select id="categoria-comida">
+                        <option value="doce">🍬 Doce</option>
+                        <option value="salgada">🥮 Salgada</option>
+                        <option value="bebida">🥤 Bebida</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-adicionar">➕ Adicionar Comida</button>
+            </form>
+            <div id="lista-comidas" class="cards-container">
+                <!-- Cards serão inseridos aqui -->
+            </div>
+        </section>
+
+        <!-- Seção de Brincadeiras -->
+        <section id="brincadeiras" class="secao">
+            <h2>🎯 Brincadeiras</h2>
+            <form id="form-brincadeira" class="formulario">
+                <div class="input-group">
+                    <input type="text" id="nome-brincadeira" placeholder="Nome da brincadeira" required>
+                    <input type="number" id="premio-brincadeira" placeholder="Valor do prêmio R$" step="0.01">
+                    <input type="number" id="duracao-brincadeira" placeholder="Duração (min)">
+                </div>
+                <button type="submit" class="btn-adicionar">➕ Adicionar Brincadeira</button>
+            </form>
+            <div id="lista-brincadeiras" class="cards-container">
+                <!-- Cards serão inseridos aqui -->
+            </div>
+        </section>
+
+        <!-- Seção de Participantes -->
+        <section id="participantes" class="secao">
+            <h2>👥 Participantes</h2>
+            <form id="form-participante" class="formulario">
+                <div class="input-group">
+                    <input type="text" id="nome-participante" placeholder="Nome completo" required>
+                    <input type="text" id="fantasia-participante" placeholder="Fantasia">
+                    <select id="tipo-participante">
+                        <option value="visitante">🎭 Visitante</option>
+                        <option value="organizador">👔 Organizador</option>
+                        <option value="artista">🎤 Artista</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-adicionar">➕ Adicionar Participante</button>
+            </form>
+            <div id="lista-participantes" class="cards-container">
+                <!-- Cards serão inseridos aqui -->
+            </div>
+        </section>
+
+        <!-- Seção de Barracas -->
+        <section id="barracas" class="secao">
+            <h2>🏪 Barracas</h2>
+            <form id="form-barraca" class="formulario">
+                <div class="input-group">
+                    <input type="text" id="nome-barraca" placeholder="Nome da barraca" required>
+                    <input type="text" id="responsavel-barraca" placeholder="Responsável" required>
+                    <select id="tipo-barraca">
+                        <option value="comida">🍽️ Comida</option>
+                        <option value="jogos">🎲 Jogos</option>
+                        <option value="danca">💃 Dança</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-adicionar">➕ Adicionar Barraca</button>
+            </form>
+            <div id="lista-barracas" class="cards-container">
+                <!-- Cards serão inseridos aqui -->
+            </div>
+        </section>
+
+        <footer class="rodape">
+            <p>🎊 Viva São João! 🎊</p>
+        </footer>
+    </div>
+
+    <script src="supabase-config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
