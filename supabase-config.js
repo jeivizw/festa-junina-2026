@@ -1,23 +1,3 @@
 // supabase-config.js
-// Para produção no Vercel, use variáveis de ambiente
-
-// Verifica se está no ambiente do Vercel
-const isVercel = window.location.hostname.includes('vercel.app');
-
-// Em desenvolvimento local, defina aqui
-const DEV_SUPABASE_URL = 'https://epklfkzyscrcbgqjzpej.supabase.co'; // Substitua
-const DEV_SUPABASE_KEY = 'sb_publishable_zjaZTZbsUVH-osxWDaNrCw_rnbrZes7'; // Substitua
-
-// Tenta pegar do Vercel ou usa as de desenvolvimento
-const SUPABASE_URL = isVercel 
-    ? '{{SUPABASE_URL}}'  // Será substituído pelo Vercel
-    : DEV_SUPABASE_URL;
-
-const SUPABASE_KEY = isVercel 
-    ? '{{SUPABASE_KEY}}'  // Será substituído pelo Vercel
-    : DEV_SUPABASE_KEY;
-
-// Para debug
-console.log('Ambiente:', isVercel ? 'Vercel' : 'Desenvolvimento');
-console.log('URL configurada:', SUPABASE_URL ? 'Sim' : 'Não');
-console.log('Key configurada:', SUPABASE_KEY ? 'Sim' : 'Não');
+const SUPABASE_URL = 'https://epklfkzyscrcbgqjzpej.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVwa2xma3p5c2NyY2JncWp6cGVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NDg1NzAsImV4cCI6MjA5NDEyNDU3MH0.EMmVKp1E-34mYDZ5LTl94AhuzDpgxlp261CTJAcrO4E';
