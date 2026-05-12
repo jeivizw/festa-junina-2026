@@ -27,42 +27,93 @@ class FestaJuninaApp {
     // ============================================
     // SUPABASE
     // ============================================
-    async inicializarSupabase() {
-        try {
-            if (typeof window.supabase !== 'undefined' && 
-                typeof SUPABASE_URL !== 'undefined' && 
-                SUPABASE_URL && 
-                !SUPABASE_URL.includes('SEU_PROJETO')) {
-                
-                this.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-                this.usandoSupabase = true;
-                this.atualizarIndicadorConexao(true, 'Conectado ao Supabase');
-                console.log('✅ Conectado ao Supabase');
-            } else {
-                this.atualizarIndicadorConexao(false, 'Usando armazenamento local');
-                console.log('ℹ️ Usando armazenamento local');
-            }
-        } catch (erro) {
-            this.atualizarIndicadorConexao(false, 'Erro de conexão');
-            console.warn('⚠️ Erro ao conectar:', erro.message);
-        }
-    }
+    // No app.js, substitua o método inicializarSupabase:
 
-    atualizarIndicadorConexao(conectado, mensagem) {
-        const indicator = document.getElementById('connection-indicator');
-        if (!indicator) return;
-        
-        const dot = indicator.querySelector('.indicator-dot');
-        const text = indicator.querySelector('span');
-        
-        if (conectado) {
-            dot.className = 'indicator-dot connected';
-        } else {
-            dot.className = 'indicator-dot disconnected';
+async inicializarSupabase() {
+    try {
+        // Verificar se as credenciais estão configuradas
+        const urlConfigurada = typeof SUPABASE_URL !== 'undefined' && 
+                               SUPABASE_URL && 
+                               !SUPABASE_URL.includes('SEU_PROJETO') &&
+                               !SUPABASE_URL.includes('COLE_SUA_URL');
+                               
+        const keyConfigurada = typeof SUPABASE_KEY !== 'undefined' && 
+                               SUPABASE_KEY && 
+                               !SUPABASE_KEY.includes('COLE_SUA_CHAVE');
+
+        if (!urlConfigurada || !keyConfigurada) {
+            console.log('ℹ️ Supabase não configurado - usando armazenamento local');
+            this.atualizarIndicadorConexao('local', 'Salvando no navegador');
+            return;
         }
+
+        if (typeof window.supabase === 'undefined') {
+            console.warn('⚠️ Biblioteca do Supabase não carregada');
+            this.atualizarIndicadorConexao('local', 'Salvando no navegador');
+            return;
+        }
+
+        // Tentar criar cliente Supabase
+        this.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         
-        if (text) text.textContent = mensagem;
+        // Testar conexão
+        const { data, error } = await this.supabase
+            .from('comidas')
+            .select('count', { count: 'exact', head: true });
+
+        if (error) {
+            // Tabelas não existem
+            if (error.code === '42P01') {
+                console.warn('⚠️ Tabelas não encontradas no Supabase');
+                this.atualizarIndicadorConexao('local', 'Tabelas não configuradas');
+            } else {
+                console.warn('⚠️ Erro ao conectar:', error.message);
+                this.atualizarIndicadorConexao('local', 'Usando armazenamento local');
+            }
+            return;
+        }
+
+        // Conexão bem sucedida!
+        this.usandoSupabase = true;
+        this.atualizarIndicadorConexao('supabase', 'Conectado ao Supabase ✅');
+        console.log('✅ Conectado ao Supabase com sucesso!');
+        
+    } catch (erro) {
+        console.log('ℹ️ Usando armazenamento local:', erro.message);
+        this.atualizarIndicadorConexao('local', 'Salvando no navegador');
     }
+}
+
+// Atualize também o método atualizarIndicadorConexao:
+atualizarIndicadorConexao(tipo, mensagem) {
+    const indicator = document.getElementById('connection-indicator');
+    if (!indicator) return;
+    
+    const dot = indicator.querySelector('.indicator-dot');
+    const text = indicator.querySelector('span');
+    
+    if (!dot || !text) return;
+    
+    // Remove classes existentes
+    dot.className = 'indicator-dot';
+    
+    switch(tipo) {
+        case 'supabase':
+            dot.classList.add('connected');
+            text.style.color = '#06D6A0';
+            break;
+        case 'local':
+            dot.classList.add('local');
+            text.style.color = '#FFD166';
+            break;
+        case 'error':
+            dot.classList.add('disconnected');
+            text.style.color = '#EF476F';
+            break;
+    }
+    
+    text.textContent = mensagem;
+}
 
     // ============================================
     // NAVEGAÇÃO

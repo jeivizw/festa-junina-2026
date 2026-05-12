@@ -827,3 +827,18 @@ select.form-input {
         grid-template-columns: 1fr;
     }
 }
+/* Adicione ao styles.css */
+.indicator-dot.local {
+    background: #FFD166;
+    animation: none;
+}
+
+.indicator-dot.connected {
+    background: #06D6A0;
+    animation: none;
+}
+
+.indicator-dot.disconnected {
+    background: #EF476F;
+    animation: none;
+}
