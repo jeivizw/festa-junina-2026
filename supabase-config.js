@@ -1,48 +1,23 @@
-// Configuração do Supabase
-// Substitua com suas credenciais do Supabase
+// supabase-config.js
+// Para produção no Vercel, use variáveis de ambiente
 
-const SUPABASE_CONFIG = {
-    url: 'https://epklfkzyscrcbgqjzpej.supabase.co', // Ex: 'https://xxxxxxxxxxxx.supabase.co'
-    key: 'sb_publishable_zjaZTZbsUVH-osxWDaNrCw_rnbrZes7' // Chave anon/public
-};
+// Verifica se está no ambiente do Vercel
+const isVercel = window.location.hostname.includes('vercel.app');
 
-// Inicialize o cliente Supabase após instalar: npm install @supabase/supabase-js
-// ou adicione via CDN no HTML
+// Em desenvolvimento local, defina aqui
+const DEV_SUPABASE_URL = 'https://epklfkzyscrcbgqjzpej.supabase.co'; // Substitua
+const DEV_SUPABASE_KEY = 'sb_publishable_zjaZTZbsUVH-osxWDaNrCw_rnbrZes7'; // Substitua
 
-// Descomente quando instalar o Supabase:
-// const supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.key);
+// Tenta pegar do Vercel ou usa as de desenvolvimento
+const SUPABASE_URL = isVercel 
+    ? '{{SUPABASE_URL}}'  // Será substituído pelo Vercel
+    : DEV_SUPABASE_URL;
 
-// Estrutura das tabelas para criar NO SUPABASE:
-/*
-CREATE TABLE comidas (
-  id SERIAL PRIMARY KEY,
-  nome VARCHAR(255) NOT NULL,
-  preco DECIMAL(10,2) NOT NULL,
-  categoria VARCHAR(50) NOT NULL,
-  created_at TIMESTAMP DEFAULT NOW()
-);
+const SUPABASE_KEY = isVercel 
+    ? '{{SUPABASE_KEY}}'  // Será substituído pelo Vercel
+    : DEV_SUPABASE_KEY;
 
-CREATE TABLE brincadeiras (
-  id SERIAL PRIMARY KEY,
-  nome VARCHAR(255) NOT NULL,
-  premio DECIMAL(10,2),
-  duracao INTEGER,
-  created_at TIMESTAMP DEFAULT NOW()
-);
-
-CREATE TABLE participantes (
-  id SERIAL PRIMARY KEY,
-  nome VARCHAR(255) NOT NULL,
-  fantasia VARCHAR(255),
-  tipo VARCHAR(50) NOT NULL,
-  created_at TIMESTAMP DEFAULT NOW()
-);
-
-CREATE TABLE barracas (
-  id SERIAL PRIMARY KEY,
-  nome VARCHAR(255) NOT NULL,
-  responsavel VARCHAR(255) NOT NULL,
-  tipo VARCHAR(50) NOT NULL,
-  created_at TIMESTAMP DEFAULT NOW()
-);
-*/
+// Para debug
+console.log('Ambiente:', isVercel ? 'Vercel' : 'Desenvolvimento');
+console.log('URL configurada:', SUPABASE_URL ? 'Sim' : 'Não');
+console.log('Key configurada:', SUPABASE_KEY ? 'Sim' : 'Não');
