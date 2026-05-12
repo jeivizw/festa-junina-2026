@@ -1,5 +1,5 @@
 // ============================================
-// FESTA JUNINA APP - SUPABASE VERSION
+// FESTA JUNINA APP - SUPABASE FINAL
 // ============================================
 
 console.log('🚀 Carregando Festa Junina App...');
@@ -10,13 +10,13 @@ console.log('🚀 Carregando Festa Junina App...');
 
 async function buscarDados(tabela) {
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
         .from(tabela)
         .select('*')
         .order('id', { ascending: false });
 
     if (error) {
-        console.error(`Erro ao buscar ${tabela}:`, error);
+        console.error(`❌ Erro ao buscar ${tabela}:`, error);
         return [];
     }
 
@@ -37,7 +37,26 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     console.log('📦 App inicializado');
 
-    // Navegação
+    // ============================================
+    // BOTÃO ADICIONAR
+    // ============================================
+
+    const btnAdd = document.getElementById('btn-add');
+
+    if (btnAdd) {
+
+        btnAdd.addEventListener('click', () => {
+
+            console.log('🔥 BOTÃO CLICADO');
+
+            abrirModal();
+        });
+    }
+
+    // ============================================
+    // NAVEGAÇÃO
+    // ============================================
+
     document.querySelectorAll('.nav-btn').forEach(btn => {
 
         btn.addEventListener('click', async function() {
@@ -56,7 +75,8 @@ document.addEventListener('DOMContentLoaded', async function() {
                 barracas: 'Barracas'
             };
 
-            const titulo = document.getElementById('current-section');
+            const titulo =
+                document.getElementById('current-section');
 
             if (titulo) {
                 titulo.textContent = titulos[tabelaAtual];
@@ -67,7 +87,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     });
 
-    // Modal
+    // ============================================
+    // FECHAR MODAL
+    // ============================================
+
     document.querySelector('.modal-backdrop')
         ?.addEventListener('click', fecharModal);
 
@@ -75,45 +98,68 @@ document.addEventListener('DOMContentLoaded', async function() {
         ?.addEventListener('click', fecharModal);
 
     document.addEventListener('keydown', function(e) {
+
         if (e.key === 'Escape') {
             fecharModal();
         }
     });
 
-    // Indicador conexão
-    const indicator = document.getElementById('connection-indicator');
+    // ============================================
+    // INDICADOR CONEXÃO
+    // ============================================
+
+    const indicator =
+        document.getElementById('connection-indicator');
 
     if (indicator) {
 
-        const dot = indicator.querySelector('.indicator-dot');
-        const text = indicator.querySelector('span');
+        const dot =
+            indicator.querySelector('.indicator-dot');
+
+        const text =
+            indicator.querySelector('span');
 
         if (dot) {
             dot.className = 'indicator-dot connected';
         }
 
         if (text) {
-            text.textContent = 'Conectado ao Supabase ☁️';
+
+            text.textContent =
+                'Conectado ao Supabase ☁️';
+
             text.style.color = '#06D6A0';
         }
     }
 
-    // Render inicial
+    // ============================================
+    // RENDER INICIAL
+    // ============================================
+
     await renderizarLista();
     await atualizarContadores();
 
-    console.log('✅ App conectado ao Supabase!');
+    console.log('✅ App carregado!');
 });
 
 // ============================================
-// MODAL
+// ABRIR MODAL
 // ============================================
 
 function abrirModal() {
 
+    console.log('📂 Abrindo modal...');
+
     const modal = document.getElementById('modal');
     const titulo = document.getElementById('modal-title');
     const body = document.getElementById('modal-body');
+
+    if (!modal || !titulo || !body) {
+
+        console.error('❌ Modal não encontrado');
+
+        return;
+    }
 
     const configs = {
 
@@ -122,21 +168,39 @@ function abrirModal() {
             campos: `
                 <div class="form-field">
                     <label>Nome *</label>
-                    <input type="text" class="form-input" id="campo-nome" placeholder="Ex: Canjica">
+                    <input type="text"
+                           class="form-input"
+                           id="campo-nome"
+                           placeholder="Ex: Canjica">
                 </div>
 
                 <div class="form-field">
                     <label>Preço *</label>
-                    <input type="number" class="form-input" id="campo-preco" step="0.01" placeholder="0.00">
+                    <input type="number"
+                           class="form-input"
+                           id="campo-preco"
+                           step="0.01"
+                           placeholder="0.00">
                 </div>
 
                 <div class="form-field">
                     <label>Categoria</label>
 
-                    <select class="form-input" id="campo-categoria">
-                        <option value="doce">🍬 Doce</option>
-                        <option value="salgada">🥮 Salgada</option>
-                        <option value="bebida">🥤 Bebida</option>
+                    <select class="form-input"
+                            id="campo-categoria">
+
+                        <option value="doce">
+                            🍬 Doce
+                        </option>
+
+                        <option value="salgada">
+                            🥮 Salgada
+                        </option>
+
+                        <option value="bebida">
+                            🥤 Bebida
+                        </option>
+
                     </select>
                 </div>
             `
@@ -147,41 +211,70 @@ function abrirModal() {
             campos: `
                 <div class="form-field">
                     <label>Nome *</label>
-                    <input type="text" class="form-input" id="campo-nome" placeholder="Ex: Pescaria">
+
+                    <input type="text"
+                           class="form-input"
+                           id="campo-nome"
+                           placeholder="Ex: Pescaria">
                 </div>
 
                 <div class="form-field">
                     <label>Prêmio</label>
-                    <input type="number" class="form-input" id="campo-premio" step="0.01">
+
+                    <input type="number"
+                           class="form-input"
+                           id="campo-premio"
+                           step="0.01">
                 </div>
 
                 <div class="form-field">
                     <label>Duração</label>
-                    <input type="number" class="form-input" id="campo-duracao">
+
+                    <input type="number"
+                           class="form-input"
+                           id="campo-duracao">
                 </div>
             `
         },
 
         participantes: {
             titulo: 'Adicionar Participante',
+
             campos: `
                 <div class="form-field">
                     <label>Nome *</label>
-                    <input type="text" class="form-input" id="campo-nome">
+
+                    <input type="text"
+                           class="form-input"
+                           id="campo-nome">
                 </div>
 
                 <div class="form-field">
                     <label>Fantasia</label>
-                    <input type="text" class="form-input" id="campo-fantasia">
+
+                    <input type="text"
+                           class="form-input"
+                           id="campo-fantasia">
                 </div>
 
                 <div class="form-field">
                     <label>Tipo</label>
 
-                    <select class="form-input" id="campo-tipo">
-                        <option value="visitante">🎭 Visitante</option>
-                        <option value="organizador">👔 Organizador</option>
-                        <option value="artista">🎤 Artista</option>
+                    <select class="form-input"
+                            id="campo-tipo">
+
+                        <option value="visitante">
+                            🎭 Visitante
+                        </option>
+
+                        <option value="organizador">
+                            👔 Organizador
+                        </option>
+
+                        <option value="artista">
+                            🎤 Artista
+                        </option>
+
                     </select>
                 </div>
             `
@@ -189,24 +282,42 @@ function abrirModal() {
 
         barracas: {
             titulo: 'Adicionar Barraca',
+
             campos: `
                 <div class="form-field">
                     <label>Nome *</label>
-                    <input type="text" class="form-input" id="campo-nome">
+
+                    <input type="text"
+                           class="form-input"
+                           id="campo-nome">
                 </div>
 
                 <div class="form-field">
                     <label>Responsável *</label>
-                    <input type="text" class="form-input" id="campo-responsavel">
+
+                    <input type="text"
+                           class="form-input"
+                           id="campo-responsavel">
                 </div>
 
                 <div class="form-field">
                     <label>Tipo</label>
 
-                    <select class="form-input" id="campo-tipo">
-                        <option value="comida">🍽️ Comida</option>
-                        <option value="jogos">🎲 Jogos</option>
-                        <option value="danca">💃 Dança</option>
+                    <select class="form-input"
+                            id="campo-tipo">
+
+                        <option value="comida">
+                            🍽️ Comida
+                        </option>
+
+                        <option value="jogos">
+                            🎲 Jogos
+                        </option>
+
+                        <option value="danca">
+                            💃 Dança
+                        </option>
+
                     </select>
                 </div>
             `
@@ -220,59 +331,72 @@ function abrirModal() {
     body.innerHTML = `
         ${config.campos}
 
-        <button class="btn-submit" onclick="salvarItem()">
+        <button class="btn-submit"
+                onclick="salvarItem()">
+
             💾 Salvar
+
         </button>
     `;
 
     modal.classList.add('active');
 }
 
+// ============================================
+// FECHAR MODAL
+// ============================================
+
 function fecharModal() {
+
     document.getElementById('modal')
         ?.classList.remove('active');
 }
 
 // ============================================
-// SAVE ITEM
+// SALVAR ITEM
 // ============================================
 
 async function salvarItem() {
 
-    const nome = document.getElementById('campo-nome')
+    const nome =
+        document.getElementById('campo-nome')
         ?.value
         ?.trim();
 
     if (!nome) {
+
         alert('⚠️ Preencha o nome!');
+
         return;
     }
 
-    const item = {
-        nome
-    };
+    const item = { nome };
 
     switch(tabelaAtual) {
 
         case 'comidas':
 
             item.preco = parseFloat(
-                document.getElementById('campo-preco')?.value || 0
+                document.getElementById('campo-preco')
+                ?.value || 0
             );
 
             item.categoria =
-                document.getElementById('campo-categoria')?.value || 'doce';
+                document.getElementById('campo-categoria')
+                ?.value || 'doce';
 
             break;
 
         case 'brincadeiras':
 
             item.premio = parseFloat(
-                document.getElementById('campo-premio')?.value || 0
+                document.getElementById('campo-premio')
+                ?.value || 0
             );
 
             item.duracao = parseInt(
-                document.getElementById('campo-duracao')?.value || 0
+                document.getElementById('campo-duracao')
+                ?.value || 0
             );
 
             break;
@@ -280,31 +404,37 @@ async function salvarItem() {
         case 'participantes':
 
             item.fantasia =
-                document.getElementById('campo-fantasia')?.value || '';
+                document.getElementById('campo-fantasia')
+                ?.value || '';
 
             item.tipo =
-                document.getElementById('campo-tipo')?.value || 'visitante';
+                document.getElementById('campo-tipo')
+                ?.value || 'visitante';
 
             break;
 
         case 'barracas':
 
             item.responsavel =
-                document.getElementById('campo-responsavel')?.value || '';
+                document.getElementById('campo-responsavel')
+                ?.value || '';
 
             item.tipo =
-                document.getElementById('campo-tipo')?.value || 'comida';
+                document.getElementById('campo-tipo')
+                ?.value || 'comida';
 
             break;
     }
 
-    const { error } = await supabase
+    console.log('💾 Salvando:', item);
+
+    const { error } = await supabaseClient
         .from(tabelaAtual)
         .insert([item]);
 
     if (error) {
 
-        console.error(error);
+        console.error('❌ Erro Supabase:', error);
 
         mostrarToast('❌ Erro ao salvar');
 
@@ -320,16 +450,17 @@ async function salvarItem() {
 }
 
 // ============================================
-// DELETE
+// EXCLUIR ITEM
 // ============================================
 
 async function excluirItem(id) {
 
-    const confirmar = confirm('Deseja excluir este item?');
+    const confirmar =
+        confirm('Deseja excluir este item?');
 
     if (!confirmar) return;
 
-    const { error } = await supabase
+    const { error } = await supabaseClient
         .from(tabelaAtual)
         .delete()
         .eq('id', id);
@@ -350,28 +481,32 @@ async function excluirItem(id) {
 }
 
 // ============================================
-// RENDER
+// RENDERIZAR
 // ============================================
 
 async function renderizarLista() {
 
-    const container = document.getElementById('items-container');
-    const emptyState = document.getElementById('empty-state');
+    const container =
+        document.getElementById('items-container');
 
-    // Remove cards antigos
+    const emptyState =
+        document.getElementById('empty-state');
+
+    if (!container) return;
+
     container.querySelectorAll('.item-card')
         .forEach(c => c.remove());
 
-    // Busca no Supabase
     const itens = await buscarDados(tabelaAtual);
 
-    // Empty state
     if (emptyState) {
+
         emptyState.style.display =
-            itens.length === 0 ? 'block' : 'none';
+            itens.length === 0
+                ? 'block'
+                : 'none';
     }
 
-    // Render cards
     itens.forEach(item => {
 
         const card = criarCard(item);
@@ -560,7 +695,6 @@ async function atualizarContadores() {
             `R$ ${totalValor.toFixed(2)}`;
     }
 
-    // Categorias fixas
     const categoriasEl =
         document.getElementById('categorias-count');
 
@@ -588,7 +722,6 @@ function mostrarToast(msg) {
         color:white;
         border-radius:8px;
         margin-bottom:8px;
-        animation:slideIn 0.3s;
     `;
 
     toast.textContent = msg;
@@ -600,4 +733,4 @@ function mostrarToast(msg) {
     }, 3000);
 }
 
-console.log('✅ App carregado!');
+console.log('🔥 APP JS CARREGADO');
