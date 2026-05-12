@@ -1,5 +1,5 @@
 // ============================================
-// APP FESTA JUNINA - Gerencimento Completo
+// APP FESTA JUNINA - Versão Local Storage
 // ============================================
 
 class FestaJuninaApp {
@@ -11,126 +11,44 @@ class FestaJuninaApp {
             participantes: [],
             barracas: []
         };
-        this.usandoSupabase = false;
-        this.supabase = null;
         
         this.inicializar();
     }
 
-    async inicializar() {
+    inicializar() {
+        this.carregarDadosLocais();
         this.configurarNavegacao();
         this.configurarModal();
-        await this.inicializarSupabase();
-        await this.carregarTodosDados();
+        this.atualizarIndicador('local');
+        this.renderizarLista('comidas');
+        this.atualizarContadores();
     }
 
-    // ============================================
-    // SUPABASE
-    // ============================================
-    // No app.js, substitua o método inicializarSupabase:
-
-async inicializarSupabase() {
-    try {
-        // Verificar se as credenciais estão configuradas
-        const urlConfigurada = typeof SUPABASE_URL !== 'undefined' && 
-                               SUPABASE_URL && 
-                               !SUPABASE_URL.includes('SEU_PROJETO') &&
-                               !SUPABASE_URL.includes('COLE_SUA_URL');
-                               
-        const keyConfigurada = typeof SUPABASE_KEY !== 'undefined' && 
-                               SUPABASE_KEY && 
-                               !SUPABASE_KEY.includes('COLE_SUA_CHAVE');
-
-        if (!urlConfigurada || !keyConfigurada) {
-            console.log('ℹ️ Supabase não configurado - usando armazenamento local');
-            this.atualizarIndicadorConexao('local', 'Salvando no navegador');
-            return;
-        }
-
-        if (typeof window.supabase === 'undefined') {
-            console.warn('⚠️ Biblioteca do Supabase não carregada');
-            this.atualizarIndicadorConexao('local', 'Salvando no navegador');
-            return;
-        }
-
-        // Tentar criar cliente Supabase
-        this.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    atualizarIndicador(tipo) {
+        const indicator = document.getElementById('connection-indicator');
+        if (!indicator) return;
         
-        // Testar conexão
-        const { data, error } = await this.supabase
-            .from('comidas')
-            .select('count', { count: 'exact', head: true });
-
-        if (error) {
-            // Tabelas não existem
-            if (error.code === '42P01') {
-                console.warn('⚠️ Tabelas não encontradas no Supabase');
-                this.atualizarIndicadorConexao('local', 'Tabelas não configuradas');
-            } else {
-                console.warn('⚠️ Erro ao conectar:', error.message);
-                this.atualizarIndicadorConexao('local', 'Usando armazenamento local');
-            }
-            return;
-        }
-
-        // Conexão bem sucedida!
-        this.usandoSupabase = true;
-        this.atualizarIndicadorConexao('supabase', 'Conectado ao Supabase ✅');
-        console.log('✅ Conectado ao Supabase com sucesso!');
+        const dot = indicator.querySelector('.indicator-dot');
+        const text = indicator.querySelector('span');
         
-    } catch (erro) {
-        console.log('ℹ️ Usando armazenamento local:', erro.message);
-        this.atualizarIndicadorConexao('local', 'Salvando no navegador');
-    }
-}
-
-// Atualize também o método atualizarIndicadorConexao:
-atualizarIndicadorConexao(tipo, mensagem) {
-    const indicator = document.getElementById('connection-indicator');
-    if (!indicator) return;
-    
-    const dot = indicator.querySelector('.indicator-dot');
-    const text = indicator.querySelector('span');
-    
-    if (!dot || !text) return;
-    
-    // Remove classes existentes
-    dot.className = 'indicator-dot';
-    
-    switch(tipo) {
-        case 'supabase':
-            dot.classList.add('connected');
-            text.style.color = '#06D6A0';
-            break;
-        case 'local':
-            dot.classList.add('local');
+        if (dot && text) {
+            dot.className = 'indicator-dot local';
+            text.textContent = 'Dados salvos no navegador 💾';
             text.style.color = '#FFD166';
-            break;
-        case 'error':
-            dot.classList.add('disconnected');
-            text.style.color = '#EF476F';
-            break;
+        }
     }
-    
-    text.textContent = mensagem;
-}
 
-    // ============================================
-    // NAVEGAÇÃO
-    // ============================================
     configurarNavegacao() {
         const navButtons = document.querySelectorAll('.nav-btn');
         
         navButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.addEventListener('click', () => {
                 const tabId = btn.dataset.tab;
                 if (!tabId) return;
                 
-                // Atualizar botões
                 navButtons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 
-                // Atualizar conteúdo
                 this.tabelaAtual = tabId;
                 this.atualizarBreadcrumb(tabId);
                 this.renderizarLista(tabId);
@@ -141,8 +59,6 @@ atualizarIndicadorConexao(tipo, mensagem) {
     atualizarBreadcrumb(tabId) {
         const breadcrumbText = document.getElementById('current-section');
         const breadcrumbIcon = document.querySelector('.breadcrumb-icon');
-        
-        if (!breadcrumbText || !breadcrumbIcon) return;
         
         const titulos = {
             'comidas': 'Comidas Típicas',
@@ -158,26 +74,14 @@ atualizarIndicadorConexao(tipo, mensagem) {
             'barracas': '🏪'
         };
         
-        breadcrumbText.textContent = titulos[tabId] || tabId;
-        breadcrumbIcon.textContent = icones[tabId] || '📋';
+        if (breadcrumbText) breadcrumbText.textContent = titulos[tabId] || tabId;
+        if (breadcrumbIcon) breadcrumbIcon.textContent = icones[tabId] || '📋';
     }
 
-    // ============================================
-    // MODAL
-    // ============================================
     configurarModal() {
-        // Fechar com ESC
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.fecharModal();
-            }
+            if (e.key === 'Escape') this.fecharModal();
         });
-
-        // Fechar ao clicar no backdrop
-        const backdrop = document.querySelector('.modal-backdrop');
-        if (backdrop) {
-            backdrop.addEventListener('click', () => this.fecharModal());
-        }
     }
 
     abrirModal() {
@@ -190,9 +94,7 @@ atualizarIndicadorConexao(tipo, mensagem) {
 
     fecharModal() {
         const modal = document.getElementById('modal');
-        if (modal) {
-            modal.classList.remove('active');
-        }
+        if (modal) modal.classList.remove('active');
     }
 
     preencherFormularioModal() {
@@ -242,10 +144,10 @@ atualizarIndicadorConexao(tipo, mensagem) {
                     <form id="form-item" onsubmit="event.preventDefault(); app.salvarItem()">
                         <div class="form-field">
                             <label>Nome da Brincadeira *</label>
-                            <input type="text" class="form-input" id="input-nome" required placeholder="Ex: Pescaria, Boca do Palhaço...">
+                            <input type="text" class="form-input" id="input-nome" required placeholder="Ex: Pescaria...">
                         </div>
                         <div class="form-field">
-                            <label>Valor do Prêmio (R$)</label>
+                            <label>Prêmio (R$)</label>
                             <input type="number" class="form-input" id="input-premio" step="0.01" placeholder="0.00">
                         </div>
                         <div class="form-field">
@@ -266,7 +168,7 @@ atualizarIndicadorConexao(tipo, mensagem) {
                         </div>
                         <div class="form-field">
                             <label>Fantasia</label>
-                            <input type="text" class="form-input" id="input-fantasia" placeholder="Ex: Noiva Caipira, Caipira...">
+                            <input type="text" class="form-input" id="input-fantasia" placeholder="Ex: Noiva Caipira">
                         </div>
                         <div class="form-field">
                             <label>Tipo</label>
@@ -286,7 +188,7 @@ atualizarIndicadorConexao(tipo, mensagem) {
                     <form id="form-item" onsubmit="event.preventDefault(); app.salvarItem()">
                         <div class="form-field">
                             <label>Nome da Barraca *</label>
-                            <input type="text" class="form-input" id="input-nome" required placeholder="Ex: Barraca do Beijo...">
+                            <input type="text" class="form-input" id="input-nome" required placeholder="Ex: Barraca do Beijo">
                         </div>
                         <div class="form-field">
                             <label>Responsável *</label>
@@ -309,136 +211,56 @@ atualizarIndicadorConexao(tipo, mensagem) {
         body.innerHTML = formularioHTML;
     }
 
-    // ============================================
-    // SALVAR ITEM
-    // ============================================
-    async salvarItem() {
-        let item = {};
-        
-        // Coletar dados do formulário
+    salvarItem() {
         const nome = document.getElementById('input-nome')?.value;
         if (!nome) {
             this.mostrarToast('Preencha o nome do item!', 'error');
             return;
         }
         
-        item.nome = nome;
-        item.created_at = new Date().toISOString();
+        const item = {
+            id: Date.now(),
+            nome: nome,
+            created_at: new Date().toISOString()
+        };
         
         switch(this.tabelaAtual) {
             case 'comidas':
                 item.preco = parseFloat(document.getElementById('input-preco')?.value) || 0;
                 item.categoria = document.getElementById('input-categoria')?.value || 'doce';
                 break;
-                
             case 'brincadeiras':
                 item.premio = parseFloat(document.getElementById('input-premio')?.value) || 0;
                 item.duracao = parseInt(document.getElementById('input-duracao')?.value) || 0;
                 break;
-                
             case 'participantes':
                 item.fantasia = document.getElementById('input-fantasia')?.value || '';
                 item.tipo = document.getElementById('input-tipo')?.value || 'visitante';
                 break;
-                
             case 'barracas':
                 item.responsavel = document.getElementById('input-responsavel')?.value || '';
                 item.tipo = document.getElementById('input-tipo')?.value || 'comida';
                 break;
         }
         
-        // Salvar no Supabase ou localStorage
-        let salvo = false;
-        
-        if (this.usandoSupabase && this.supabase) {
-            try {
-                const { data, error } = await this.supabase
-                    .from(this.tabelaAtual)
-                    .insert([item])
-                    .select()
-                    .single();
-                    
-                if (!error && data) {
-                    item.id = data.id;
-                    salvo = true;
-                }
-            } catch (erro) {
-                console.warn('Erro ao salvar no Supabase:', erro.message);
-            }
-        }
-        
-        // Sempre salvar no localStorage como backup
-        if (!salvo) {
-            item.id = Date.now();
-        }
-        
         this.dados[this.tabelaAtual].unshift(item);
         this.salvarLocalStorage();
-        
         this.fecharModal();
         this.renderizarLista(this.tabelaAtual);
         this.mostrarToast('Item adicionado com sucesso! ✅', 'success');
     }
 
-    // ============================================
-    // EXCLUIR ITEM
-    // ============================================
-    async excluirItem(id) {
+    excluirItem(id) {
         if (!confirm('Tem certeza que deseja excluir este item?')) return;
-        
-        if (this.usandoSupabase && this.supabase) {
-            try {
-                await this.supabase
-                    .from(this.tabelaAtual)
-                    .delete()
-                    .eq('id', id);
-            } catch (erro) {
-                console.warn('Erro ao excluir no Supabase:', erro.message);
-            }
-        }
         
         this.dados[this.tabelaAtual] = this.dados[this.tabelaAtual].filter(item => item.id !== id);
         this.salvarLocalStorage();
         this.renderizarLista(this.tabelaAtual);
-        this.mostrarToast('Item excluído com sucesso! 🗑️', 'success');
+        this.mostrarToast('Item excluído! 🗑️', 'success');
     }
 
-    // ============================================
-    // CARREGAR DADOS
-    // ============================================
-    async carregarTodosDados() {
-        // Carregar do localStorage primeiro
-        this.carregarLocalStorage();
-        
-        // Tentar carregar do Supabase
-        if (this.usandoSupabase && this.supabase) {
-            const tabelas = ['comidas', 'brincadeiras', 'participantes', 'barracas'];
-            
-            for (let tabela of tabelas) {
-                try {
-                    const { data, error } = await this.supabase
-                        .from(tabela)
-                        .select('*')
-                        .order('created_at', { ascending: false });
-                        
-                    if (!error && data && data.length > 0) {
-                        this.dados[tabela] = data;
-                    }
-                } catch (erro) {
-                    console.warn(`Erro ao carregar ${tabela}:`, erro.message);
-                }
-            }
-            
-            this.salvarLocalStorage();
-        }
-        
-        this.renderizarLista('comidas');
-        this.atualizarContadores();
-    }
-
-    carregarLocalStorage() {
+    carregarDadosLocais() {
         const tabelas = ['comidas', 'brincadeiras', 'participantes', 'barracas'];
-        
         tabelas.forEach(tabela => {
             const dados = localStorage.getItem(`festa_${tabela}`);
             if (dados) {
@@ -457,9 +279,6 @@ atualizarIndicadorConexao(tipo, mensagem) {
         });
     }
 
-    // ============================================
-    // RENDERIZAR LISTA
-    // ============================================
     renderizarLista(tabela) {
         const container = document.getElementById('items-container');
         const emptyState = document.getElementById('empty-state');
@@ -468,7 +287,7 @@ atualizarIndicadorConexao(tipo, mensagem) {
         
         const itens = this.dados[tabela] || [];
         
-        // Remover cards existentes
+        // Limpar cards existentes
         const existingCards = container.querySelectorAll('.item-card');
         existingCards.forEach(card => card.remove());
         
@@ -497,7 +316,8 @@ atualizarIndicadorConexao(tipo, mensagem) {
         
         switch(tabela) {
             case 'comidas':
-                emoji = this.getEmojiComida(item.categoria);
+                const emojisComida = { 'doce': '🍰', 'salgada': '🥮', 'bebida': '🥤' };
+                emoji = emojisComida[item.categoria] || '🍽️';
                 badgeClass = item.categoria;
                 badgeText = item.categoria;
                 infoHTML = `
@@ -524,7 +344,8 @@ atualizarIndicadorConexao(tipo, mensagem) {
                 break;
                 
             case 'participantes':
-                emoji = this.getEmojiParticipante(item.tipo);
+                const emojisPart = { 'visitante': '🎭', 'organizador': '👔', 'artista': '🎤' };
+                emoji = emojisPart[item.tipo] || '👤';
                 badgeText = item.tipo;
                 infoHTML = `
                     <div class="card-info">
@@ -535,7 +356,8 @@ atualizarIndicadorConexao(tipo, mensagem) {
                 break;
                 
             case 'barracas':
-                emoji = this.getEmojiBarraca(item.tipo);
+                const emojisBarr = { 'comida': '🍽️', 'jogos': '🎲', 'danca': '💃' };
+                emoji = emojisBarr[item.tipo] || '🏪';
                 badgeText = item.tipo;
                 infoHTML = `
                     <div class="card-info">
@@ -566,34 +388,12 @@ atualizarIndicadorConexao(tipo, mensagem) {
         return card;
     }
 
-    getEmojiComida(categoria) {
-        const emojis = { 'doce': '🍰', 'salgada': '🥮', 'bebida': '🥤' };
-        return emojis[categoria] || '🍽️';
-    }
-
-    getEmojiParticipante(tipo) {
-        const emojis = { 'visitante': '🎭', 'organizador': '👔', 'artista': '🎤' };
-        return emojis[tipo] || '👤';
-    }
-
-    getEmojiBarraca(tipo) {
-        const emojis = { 'comida': '🍽️', 'jogos': '🎲', 'danca': '💃' };
-        return emojis[tipo] || '🏪';
-    }
-
-    // ============================================
-    // ATUALIZAR CONTADORES
-    // ============================================
     atualizarContadores() {
-        // Atualizar badges da navegação
         Object.keys(this.dados).forEach(tabela => {
             const badge = document.getElementById(`count-${tabela}`);
-            if (badge) {
-                badge.textContent = this.dados[tabela].length;
-            }
+            if (badge) badge.textContent = this.dados[tabela].length;
         });
         
-        // Atualizar stats
         const totalItems = document.getElementById('total-items');
         const valorTotal = document.getElementById('valor-total');
         const categoriasCount = document.getElementById('categorias-count');
@@ -605,34 +405,20 @@ atualizarIndicadorConexao(tipo, mensagem) {
         
         if (valorTotal) {
             let totalValor = 0;
-            
-            // Somar preços das comidas
-            this.dados.comidas.forEach(item => {
-                totalValor += parseFloat(item.preco || 0);
-            });
-            
-            // Somar prêmios das brincadeiras
-            this.dados.brincadeiras.forEach(item => {
-                totalValor += parseFloat(item.premio || 0);
-            });
-            
+            this.dados.comidas.forEach(item => totalValor += parseFloat(item.preco || 0));
+            this.dados.brincadeiras.forEach(item => totalValor += parseFloat(item.premio || 0));
             valorTotal.textContent = `R$ ${totalValor.toFixed(2)}`;
         }
         
         if (categoriasCount) {
             const categorias = new Set();
-            
             this.dados.comidas.forEach(item => categorias.add(item.categoria));
             this.dados.participantes.forEach(item => categorias.add(item.tipo));
             this.dados.barracas.forEach(item => categorias.add(item.tipo));
-            
             categoriasCount.textContent = categorias.size;
         }
     }
 
-    // ============================================
-    // TOAST
-    // ============================================
     mostrarToast(mensagem, tipo = 'info') {
         const container = document.getElementById('toast-container');
         if (!container) return;
@@ -651,15 +437,12 @@ atualizarIndicadorConexao(tipo, mensagem) {
     }
 }
 
-// ============================================
-// INICIALIZAÇÃO GLOBAL
-// ============================================
+// Inicialização
 let app;
 
 document.addEventListener('DOMContentLoaded', () => {
     app = new FestaJuninaApp();
     
-    // Expor funções globais
     window.abrirModal = () => app.abrirModal();
     window.fecharModal = () => app.fecharModal();
     window.app = app;
