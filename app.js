@@ -732,5 +732,79 @@ function mostrarToast(msg) {
         toast.remove();
     }, 3000);
 }
+// --- Lógica do Tema ---
+const themeToggle = document.getElementById('theme-toggle');
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        const isDark = document.body.classList.toggle('dark-mode');
+        themeToggle.innerText = isDark ? '☀️ Modo Claro' : '🌙 Modo Escuro';
+        localStorage.setItem('tema-escuro', isDark);
+    });
+}
+
+// --- Lógica do Vídeo (Youtube) ---
+// O vídeo só toca após o primeiro clique do usuário na página (regra do navegador)
+document.addEventListener('click', function() {
+    const player = document.getElementById('youtube-player');
+    if (player && !player.src) {
+        const videoID = 'X8jD3F9PI7Q'; // Música de Festa Junina
+        player.src = `https://www.youtube.com/embed/${videoID}?autoplay=1&loop=1&playlist=${videoID}`;
+        console.log("🎶 Música iniciada!");
+    }
+}, { once: true }); // Executa apenas uma vez
+
+// --- Lógica da Fogueira ---
+const fire = document.getElementById('cursor-fire');
+if (fire) {
+    document.addEventListener('mousemove', (e) => {
+        fire.style.left = e.clientX + 'px';
+        fire.style.top = e.clientY + 'px';
+    });
+}
+    // 3. LGPD Caipira
+function aceitarLGPD() {
+    document.getElementById('lgpd-caipira').style.display = 'none';
+    localStorage.setItem('lgpd-aceita', 'true');
+}
+// ============================================
+// YOUTUBE AUTO PLAYER
+// ============================================
+
+function iniciarYoutube() {
+
+    // Evita repetir
+
+    if (window.youtubeIniciado) return;
+
+    window.youtubeIniciado = true;
+
+    const player =
+        document.getElementById('youtube-player');
+
+    if (!player) return;
+
+    // =========================================
+    // COLOQUE O LINK DO VÍDEO AQUI
+    // =========================================
+
+    const videoID = 'X8jD3F9PI7Q';
+
+    player.src =
+        `https://www.youtube.com/embed/${videoID}?autoplay=1&mute=0`;
+
+    // Mostrar player
+
+    player.style.opacity = '1';
+
+    player.style.pointerEvents = 'auto';
+}
+
+// Inicia após primeiro clique
+
+document.addEventListener(
+    'click',
+    iniciarYoutube,
+    { once: true }
+);
 
 console.log('🔥 APP JS CARREGADO');

@@ -842,3 +842,149 @@ select.form-input {
     background: #EF476F;
     animation: none;
 }
+/* Fogueira Animada */
+.cursor-fire {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -100%);
+}
+
+.fire-flame {
+    position: absolute;
+    bottom: 0;
+    width: 10px;
+    height: 25px;
+    background: linear-gradient(to top, #FF3D00, #FFD166);
+    border-radius: 50% 50% 20% 20%;
+    filter: blur(2px);
+    animation: flameRise 0.5s infinite alternate;
+}
+
+@keyframes flameRise {
+    from { transform: scaleY(1); opacity: 0.8; }
+    to { transform: scaleY(1.5); opacity: 1; }
+}
+
+/* LGPD Caipira */
+.lgpd-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #FFD166;
+    padding: 15px 25px;
+    border-radius: 50px;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 10000;
+    border: 3px solid #FF6B35;
+}
+
+/* ============================================
+   MODO ESCURO - CORREÇÃO TOTAL
+============================================ */
+
+/* Fundo da página e textos principais */
+body.dark-mode {
+    background-color: #111827 !important;
+    color: #F9FAFB !important;
+}
+
+/* Área central onde ficam os cards */
+body.dark-mode .main-content, 
+body.dark-mode .content-area {
+    background-color: #111827 !important;
+}
+
+/* Barras lateral e superior */
+body.dark-mode .sidebar, 
+body.dark-mode .top-bar {
+    background-color: #1F2937 !important;
+    border-color: #374151 !important;
+}
+
+/* Cards de estatísticas e de itens */
+body.dark-mode .stat-card, 
+body.dark-mode .item-card, 
+body.dark-mode .modal-content,
+body.dark-mode .empty-state {
+    background-color: #1F2937 !important;
+    border-color: #374151 !important;
+    color: #000000 !important;
+}
+
+/* Ajuste de cores de títulos e textos cinzas */
+body.dark-mode .logo-text, 
+body.dark-mode .breadcrumb-text, 
+body.dark-mode .card-title, 
+body.dark-mode .stat-value,
+body.dark-mode .nav-title {
+    color: #000000 !important;
+}
+
+body.dark-mode .nav-desc, 
+body.dark-mode .stat-label, 
+body.dark-mode .card-info-value,
+body.dark-mode .logo-subtitle {
+    color: #000000 !important;
+}
+
+/* Inputs do formulário */
+body.dark-mode .form-input {
+    background: #111827 !important;
+    border-color: #374151 !important;
+    color: white !important;
+}
+/* Estilo do Mini Player */
+.mini-player {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 280px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    z-index: 9999;
+    overflow: hidden;
+    display: none; /* Começa escondido */
+    border: 2px solid var(--primary);
+}
+
+.player-header {
+    background: var(--primary);
+    color: white;
+    padding: 5px 12px;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+.close-player {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* Ajuste para o modo escuro não "sumir" com o player */
+body.dark-mode .mini-player {
+    background: #1f2937;
+    border-color: #ff6b35;
+}
+/* Ajuste do player no modo escuro */
+body.dark-mode #music-container {
+    background: #171717 !important;
+    border-color: #FF6B35 !important;
+}
+
+body.dark-mode #music-container span {
+    color: white !important;
+}

@@ -9,8 +9,15 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+    <div id="cursor-fire" class="cursor-fire">
+        <div class="fire-glow"></div>
+        <div class="fire-flame"></div>
+        <div class="fire-flame"></div>
+        <div class="fire-flame"></div>
+        <div class="fire-core"></div>
+    </div>
+
     <div class="app-wrapper">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="logo-icon">🎪</div>
@@ -64,26 +71,28 @@
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="main-content">
-            <!-- Top Bar -->
             <header class="top-bar">
                 <div class="breadcrumb">
                     <span class="breadcrumb-icon">🌾</span>
                     <span class="breadcrumb-text" id="current-section">Comidas Típicas</span>
                 </div>
-                
-                <button class="add-button" id="btn-add">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                    Novo Item
-                </button>
+
+                <div class="top-actions" style="display: flex; gap: 10px; align-items: center;">
+                    <button id="theme-toggle" class="theme-toggle" style="background: var(--gray-200); border: none; padding: 10px 15px; border-radius: 12px; cursor: pointer; font-weight: 600;">
+                        🌙 Modo Escuro
+                    </button>
+                    
+                    <button class="add-button" id="btn-add">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                        Novo Item
+                    </button>
+                </div>
             </header>
 
-            <!-- Content Area -->
             <section class="content-area">
-                <!-- Stats Cards -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon">🎊</div>
@@ -108,9 +117,7 @@
                     </div>
                 </div>
 
-                <!-- Items Grid -->
                 <div class="items-grid" id="items-container">
-                    <!-- Empty State -->
                     <div class="empty-state" id="empty-state">
                         <div class="empty-illustration">🎈</div>
                         <h3>Nenhum item encontrado</h3>
@@ -121,7 +128,6 @@
         </main>
     </div>
 
-    <!-- Modal -->
     <div class="modal" id="modal">
         <div class="modal-backdrop" onclick="fecharModal()"></div>
         <div class="modal-content">
@@ -129,19 +135,51 @@
                 <h2 id="modal-title">Adicionar Item</h2>
                 <button class="modal-close" onclick="fecharModal()">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path d="M6 6L18 18M6 18L18 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M6 6L18 18M6 18L18 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                     </svg>
                 </button>
             </div>
-            <div class="modal-body" id="modal-body">
-                <!-- Dynamic form content -->
-            </div>
+            <div class="modal-body" id="modal-body"></div>
         </div>
     </div>
 
-    <!-- Toast -->
     <div class="toast-container" id="toast-container"></div>
-    
+
+    <!-- =========================================
+     YOUTUBE PLAYER
+========================================= -->
+
+<iframe
+    id="youtube-player"
+    width="0"
+    height="0"
+    src=""
+    title="YouTube video player"
+    frameborder="0"
+    allow="autoplay; encrypted-media"
+    allowfullscreen
+    style="
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 320px;
+        height: 180px;
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        z-index: 99999;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.5s;
+    ">
+</iframe>
+
+    <div id="lgpd-caipira" class="lgpd-container">
+        <p>🤠 <strong>LGPD:</strong> Uai, seus dados tão guardado num baú com cadeado, sô! Aceita?</p>
+        <button onclick="aceitarLGPD()">Aceito, uai!</button>
+    </div>
+
     <script src="supabase-config.js"></script>
     <script src="app.js"></script>
 </body>
